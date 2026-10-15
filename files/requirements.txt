@@ -1,0 +1,11 @@
+onnx-asr[cpu,hub]==0.12.0
+sounddevice
+numpy
+keyboard
+pyperclip
+pillow
+pystray
+uiautomation
+scipy
+pywebview
+ddgs

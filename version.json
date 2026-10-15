@@ -1,0 +1,36 @@
+{
+  "version": "1.0.69",
+  "canal": "stable",
+  "requirements": false,
+  "files": {
+    "Hear.bat": "887b9b42ec5437cfee18a17fd05859f3f9a5fb76e024d68b9900cccfe7e34c38",
+    "agent.ico": "42d447ced4d58ae6e37af20fd5eeb45b6af25ff4d7d10d0aa2b8856edc166275",
+    "agent.png": "52384f17e2a08bcd1b9affb8cf5d0f7b7fa27dc448118d54fe8e4c305d24be1e",
+    "hear.py": "0273f64231ee2ae580bac29467d528ac48c4c77b2be03f345858006170fe2c81",
+    "hear_agent.pyc": "1121ac97dae1007c3c7ae6fa49090bff3a1a90b0fcd109ee66e86a0d024e1e1e",
+    "hear_app.pyc": "cb0c6e446b21f20b378a73ca3c4123775ca8e0ac982a901007366491c328a888",
+    "hear_audio.pyc": "5eaf60b5bff9a23e4ccfabd9646c4943f65f7133a068721bc6d14faecfe0d5ce",
+    "hear_config.pyc": "eeed796e18d4714e43dc27301d349279ca282545e2f8009e62c0e60544711bf3",
+    "hear_dessin.pyc": "08def8549424d1797de34f2086b30485d79348a7f1d9ac27aeede432004cd0ba",
+    "hear_langue.pyc": "8987049074674e3d21dbf08c442b275cb92667b7009d35c682b66cb16c764b4e",
+    "hear_maj.pyc": "88a101b1d3a875576d7309e4adb0d3b623200090f6b4c510627cd73457e699aa",
+    "hear_reglages.pyc": "d0553c275e1ae336437904dd8a2beb8c5eb3988663af3f16d589f295495d4ef3",
+    "hear_reglages_web.py": "3bd7c4d6a840c7c6f4dc47c83d2a9fe13ddacd54eb94f1fbf7a91a4566c90fdd",
+    "hear_reglages_web_app.pyc": "e8c859736dd363e2749409cb4c87e33066af151f969ea1982b812e4b6cdc1767",
+    "hear_signature.pyc": "40ffd4733f1b5e0ab931edc0294896b83e036e80be49e579e4eaa89200e9acc5",
+    "logo.ico": "9ad1a5974a56781356d03c98b656ae26fd71ca5cd905499626dd8ae6b317151f",
+    "logo.png": "f4e1662a7d1109edee994cf85f710866e381f12dff2dd2369dce3f40d93d1081",
+    "reglages.html": "6988e5328cb57a616a9fdefaa92764546f8f101bbaac3050a4fcaae5388f8708",
+    "requirements.txt": "c7d17c209405577a90226ff6984774e8a5e50eec3e1df82a3598ad92e57bad21"
+  },
+  "supprimer": [
+    "hear_agent.py",
+    "hear_audio.py",
+    "hear_config.py",
+    "hear_dessin.py",
+    "hear_langue.py",
+    "hear_maj.py",
+    "hear_reglages.py",
+    "hear_signature.py"
+  ]
+}
