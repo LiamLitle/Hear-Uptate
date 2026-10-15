@@ -1,5 +1,5 @@
 {
-  "version": "1.0.69",
+  "version": "1.0.70",
   "canal": "stable",
   "requirements": false,
   "files": {
@@ -8,8 +8,8 @@
     "agent.png": "52384f17e2a08bcd1b9affb8cf5d0f7b7fa27dc448118d54fe8e4c305d24be1e",
     "hear.py": "0273f64231ee2ae580bac29467d528ac48c4c77b2be03f345858006170fe2c81",
     "hear_agent.pyc": "1121ac97dae1007c3c7ae6fa49090bff3a1a90b0fcd109ee66e86a0d024e1e1e",
-    "hear_app.pyc": "cb0c6e446b21f20b378a73ca3c4123775ca8e0ac982a901007366491c328a888",
-    "hear_audio.pyc": "5eaf60b5bff9a23e4ccfabd9646c4943f65f7133a068721bc6d14faecfe0d5ce",
+    "hear_app.pyc": "c54e8f19d90ede6cc1d3e50d5d234127de0eaba6dc6d5a31e78763d729b60f09",
+    "hear_audio.pyc": "5f92bb84b2eb07acd9e2fe7dba2aafdafa3b9e28ecc0075ef137b36373972133",
     "hear_config.pyc": "eeed796e18d4714e43dc27301d349279ca282545e2f8009e62c0e60544711bf3",
     "hear_dessin.pyc": "08def8549424d1797de34f2086b30485d79348a7f1d9ac27aeede432004cd0ba",
     "hear_langue.pyc": "8987049074674e3d21dbf08c442b275cb92667b7009d35c682b66cb16c764b4e",
