@@ -253,6 +253,7 @@ textarea.zone::placeholder{color:#6c6c70}
 .ligne+.ligne{border-top:1px solid var(--sep)}
 .ligne b{font-size:15px}
 .ligne small{font-size:12.5px;line-height:1.45;margin-top:3px;max-width:52ch}
+.ligne.pile{flex-direction:column;align-items:flex-start;gap:10px}   /* le texte d'abord, les boutons dessous : rien n'est ecrase */
 .grille{display:block}
 .cartes-m{padding:6px 0 14px;gap:12px}
 .puces{padding:12px 0 6px}
@@ -418,7 +419,6 @@ body.occupe .choix{pointer-events:none;opacity:.45}
         <div class="ligne"><b>Assistant key</b><div class="touche"><span class="kbd" id="kbd-a">F10</span></div></div>
         <div class="ligne"><div><b>Listen right away</b><small>F10 starts the microphone instead of the text box</small></div><div class="bascule" data-k="agent_voix_auto"></div></div>
         <div class="ligne"><div><b>Use selected text</b><small>Select text, press F10, say what to do. The result is copied</small></div><div class="bascule" data-k="agent_selection"></div></div>
-        <div class="ligne"><div><b>Keep it ready</b><small>Always loaded, so it answers right away (uses about 3 GB)</small></div><div class="bascule" data-k="agent_pret"></div></div>
         <div class="ligne"><div><b>Conversation</b><small>Forget what was said so far. Long-term memory stays</small></div><button class="btn rouge petit" id="conv-vider">Clear</button></div>
       </div>
       <div class="note" id="ag-note"></div>
@@ -516,6 +516,15 @@ body.occupe .choix{pointer-events:none;opacity:.45}
         <div class="ligne"><div><b>Space after text</b><small>A space is added after each dictation, so the next one never sticks to the last word</small></div><span class="tj">On</span></div>
       </div></div></div></div>
     </div>
+    <div class="section" data-s="modeles">
+      <div class="titre"><svg viewBox="0 0 12 12"><path d="M2.5 4.5L6 8l3.5-3.5"/></svg>AI models in memory</div>
+      <div class="plie"><div class="in"><div class="pad"><div class="carte">
+        <div class="ligne"><div><b>In memory now</b><small id="mod-etat">Nothing loaded. The models load when you press a key</small></div><button class="btn bleu petit" id="mod-decharger">Unload now</button></div>
+        <div class="ligne pile"><div><b>Free memory when idle</b><small id="decharge-sub">Unloads the AI models after 30 min without use. A key press loads them back, which takes a few seconds</small></div>
+          <div class="choix" id="decharge" role="radiogroup" aria-label="Free memory when idle"><button data-v="10" role="radio">10 min</button><button data-v="30" role="radio">30 min</button><button data-v="60" role="radio">1 h</button><button data-v="0" role="radio">Never</button></div></div>
+        <div class="ligne" id="ln-alterne"><div><b>One AI at a time on the graphics card</b><small id="alterne-sub">For cards with 4 to 6 GB. When the assistant answers, Ultra dictation unloads. After 3 min without the assistant, it unloads and dictation comes back</small></div><div class="bascule" data-k="memoire_alternee"></div></div>
+      </div></div></div></div>
+    </div>
     <div class="section" data-s="systeme">
       <div class="titre"><svg viewBox="0 0 12 12"><path d="M2.5 4.5L6 8l3.5-3.5"/></svg>System</div>
       <div class="plie"><div class="in"><div class="pad"><div class="carte">
@@ -537,10 +546,10 @@ body.occupe .choix{pointer-events:none;opacity:.45}
 </div>
 
 <script>
-const SECTIONS = ["reco","parlees","assistant","pastille","perf","prompt","memoire","historique","dictee","audio","ecriture","systeme"];
+const SECTIONS = ["reco","parlees","assistant","pastille","perf","prompt","memoire","historique","dictee","audio","ecriture","modeles","systeme"];
 const PROMPT_IMPORT = `Export all of my stored memories and any context you\u2019ve learned about me from past conversations. Preserve my words verbatim where possible, especially for instructions and preferences.\n\n## Categories (output in this order):\n\n1. **Instructions**: Rules I\u2019ve explicitly asked you to follow going forward \u2014 tone, format, style, \"always do X\", \"never do Y\", and corrections to your behavior. Only include rules from stored memories, not from conversations.\n\n2. **Identity**: Name, age, location, education, family, relationships, languages, and personal interests.\n\n3. **Career**: Current and past roles, companies, and general skill areas.\n\n4. **Projects**: Projects I meaningfully built or committed to. Ideally ONE entry per project. Include what it does, current status, and any key decisions. Use the project name or a short descriptor as the first words of the entry.\n\n5. **Preferences**: Opinions, tastes, and working-style preferences that apply broadly.\n\n## Format:\n\nUse section headers for each category. Within each category, list one entry per line, sorted by oldest date first. Format each line as:\n\n[YYYY-MM-DD] - Entry content here.\n\nIf no date is known, use [unknown] instead.\n\n## Output:\n- Wrap the entire export in a single code block for easy copying.\n- After the code block, state whether this is the complete set or if more remain.`;
 let MODE = "dictee";
-const DEF_VRAI = new Set(["agent_statut", "agent_details", "agent_compagnon", "agent_pret", "dictee_actif", "agent_selection", "agent_pc", "agent_chrome"]);
+const DEF_VRAI = new Set(["agent_statut", "agent_details", "agent_compagnon", "dictee_actif", "agent_selection", "agent_pc", "agent_chrome"]);
 const DEFAUT_PLIE = {parlees:true};
 const ETAPES = {engine:"Downloading the engine", model:"Downloading the model"};
 const ULTRA_LG = new Set(["cs","da","nl","en","fi","fr","de","el","hu","it","pl","pt","ro","ru","es","sv"]);
@@ -688,6 +697,16 @@ function maj(){
   $$("#reflexion button").forEach(b => { const on = b.dataset.v === rf; b.classList.toggle("on", on); b.setAttribute("aria-checked", on); });
   $("#refl-sub").textContent = {off: "Answers right away, never reasons first", auto: "It decides by itself when a question needs reasoning",
                                 on: "Always reasons before answering. Slower"}[rf];
+  const dm = c.decharge_min === undefined ? 30 : c.decharge_min;
+  $$("#decharge button").forEach(b => { const on = Number(b.dataset.v) === dm; b.classList.toggle("on", on); b.setAttribute("aria-checked", on); });
+  $("#decharge-sub").textContent = dm === 0 ? "The AI models stay in memory until you quit Hear (uses up to 5 GB)"
+    : "Unloads the AI models after " + (dm === 60 ? "1 hour" : dm + " min") + " without use. A key press loads them back, which takes a few seconds";
+  const chg = S.charge || {}, nomDictee = {ultra: "Ultra", canary: "Precise"}[c.model] || "Fast";
+  const enMemoire = [chg.dictee ? "Dictation (" + nomDictee + ")" : null, chg.assistant ? "Assistant" : null].filter(Boolean);
+  $("#mod-etat").textContent = enMemoire.length ? enMemoire.join(" and ") + (enMemoire.length > 1 ? " are loaded" : " is loaded") : "Nothing loaded. The models load when you press a key";
+  $("#mod-decharger").disabled = !enMemoire.length || !!S.occupe;
+  $("#ln-alterne").classList.toggle("inactif", !ultra);
+  $("#alterne-sub").textContent = ultra ? "For cards with 4 to 6 GB. When the assistant answers, Ultra dictation unloads. After 3 min without the assistant, it unloads and dictation comes back" : "Needs the Ultra model";
   const pr = $("#prompt");
   if(document.activeElement !== pr && pr.value !== (c.agent_prompt || "")) pr.value = c.agent_prompt || "";
   $("#prompt-n").textContent = (pr.value.length ? pr.value.length + " / 2000" : "");
@@ -753,6 +772,13 @@ function maj(){
   else if(mj.etat === "erreur") { me.textContent = mj.msg || "Could not check for updates."; me.className = "ko"; }
   else me.textContent = "Version " + (S.version || "");
   $("#maj-btn").classList.toggle("attend", mj.etat === "check" || mj.etat === "installation");
+  // apres « Check now » : un message clair, une seule fois (a jour, mise a jour en cours, erreur)
+  if(S.majClic && mj.t && mj.t * 1000 >= S.majClic - 1500 && mj.t !== S.majVu && ["a_jour", "installation", "erreur"].includes(mj.etat)){
+    S.majVu = mj.t;
+    if(mj.etat === "a_jour") toast("You're up to date ✓ No new update");
+    else if(mj.etat === "installation") toast("Updating… Hear restarts by itself");
+    else toast(mj.msg || "Could not check for updates", true);
+  }
   const dispo = mj.etat === "dispo", dev = mj.canal === "dev";
   $("#maj-dispo").style.display = dispo ? "" : "none";
   if(dispo){
@@ -832,7 +858,7 @@ $("#pos-reset").onclick = () => { S.cfg.pilule_xy = null; envoyer("agent_decalag
 $("#mem-tout").onclick = () => { const m = $("#mem"); m.classList.toggle("tout"); $("#mem-tout").textContent = m.classList.contains("tout") ? "Collapse" : "Show all"; };
 const ajouter = () => { const i = $("#mem-new"), v = i.value.trim(); if(!v) return; i.value = ""; (S.memoire = S.memoire || []).push({t: v}); maj.cleMem = null; envoyer("memoire_ajouter", v); maj(); };
 $("#mem-add").onclick = ajouter; $("#mem-new").onkeydown = e => { if(e.key === "Enter") ajouter(); };
-$("#maj-btn").onclick = () => { if(S.occupe) return toast("Locked while Hear is recording", true); S.maj = {etat: "check"}; maj(); envoyer("@maj", Date.now()); };
+$("#maj-btn").onclick = () => { if(S.occupe) return toast("Locked while Hear is recording", true); S.maj = {etat: "check"}; S.majClic = Date.now(); maj(); envoyer("@maj", Date.now()); };
 $("#maj-redem-btn").onclick = () => envoyer("@relancer", Date.now());
 // emplacement des fichiers de Hear : un autre dossier ou un autre disque
 let donneesTaille = null, donneesCible = null;
@@ -916,6 +942,8 @@ $$("#nav .puce").forEach(p => p.onclick = () => { const el = $('[data-s="' + p.d
 $("#vis-stop").onclick = () => { envoyer("agent_vision", false); };
 let tPrompt = 0;
 $$("#reflexion button").forEach(b => b.onclick = () => { S.cfg.agent_reflexion = b.dataset.v; envoyer("agent_reflexion", b.dataset.v); maj(); });
+$("#mod-decharger").onclick = () => { envoyer("decharger_maintenant", Date.now()); toast("Unloading…"); };
+$$("#decharge button").forEach(b => b.onclick = () => { S.cfg.decharge_min = Number(b.dataset.v); envoyer("decharge_min", Number(b.dataset.v)); maj(); });
 // « Your words » : une etiquette par mot ; Entree ou virgule ajoute, la croix (ou Retour arriere sur un champ vide) retire
 const mots = () => (S.cfg.vocabulaire || "").split(",").map(m => m.trim()).filter(Boolean);
 function dessinerMots(){

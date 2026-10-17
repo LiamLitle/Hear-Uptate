@@ -1,5 +1,5 @@
 {
-  "version": "1.1.2",
+  "version": "1.1.3",
   "canal": "stable",
   "requirements": false,
   "files": {
@@ -7,11 +7,11 @@
     "agent.ico": "42d447ced4d58ae6e37af20fd5eeb45b6af25ff4d7d10d0aa2b8856edc166275",
     "agent.png": "52384f17e2a08bcd1b9affb8cf5d0f7b7fa27dc448118d54fe8e4c305d24be1e",
     "hear.py": "0273f64231ee2ae580bac29467d528ac48c4c77b2be03f345858006170fe2c81",
-    "hear_agent.pyc": "03f298397aee575d1b53dcef42e2842dd810044da6056c56e763813566241994",
-    "hear_app.pyc": "0f9ba219e2bf208ce2c368f7d9468479a1a42dee8cabd88a3a6c8c2325a9e064",
+    "hear_agent.pyc": "1a8eb21aa881b80af0a56406d6912a226ff265d3e3e275061a749638595da422",
+    "hear_app.pyc": "5383ce315c4e371c039c1ddf193729fb4cd0969efd3b305e5607087e5327c2d6",
     "hear_audio.pyc": "5f92bb84b2eb07acd9e2fe7dba2aafdafa3b9e28ecc0075ef137b36373972133",
-    "hear_config.pyc": "5cd4d857c188a079d4a6b4aaf0dc8216ff4e4f0fcd312b686166cb173bc8b76b",
-    "hear_dessin.pyc": "08def8549424d1797de34f2086b30485d79348a7f1d9ac27aeede432004cd0ba",
+    "hear_config.pyc": "f306ee9dfd19565339c93e83379b576fe2991d308cd05a317ebf589848eed2e2",
+    "hear_dessin.pyc": "533def3f164cb4b8a2facc4f84ae8985019e185dda89142d9175ffbdd7563457",
     "hear_langue.pyc": "8987049074674e3d21dbf08c442b275cb92667b7009d35c682b66cb16c764b4e",
     "hear_maj.pyc": "c6175b20e1502d07285849dffb453dfa3cb462052202d656f68d018988b6647a",
     "hear_nombres.pyc": "30909c0723a4c460c68981337c246644897cfd4e1c9193d8e5cdcaa2f3c64385",
@@ -21,7 +21,7 @@
     "hear_signature.pyc": "40ffd4733f1b5e0ab931edc0294896b83e036e80be49e579e4eaa89200e9acc5",
     "logo.ico": "9ad1a5974a56781356d03c98b656ae26fd71ca5cd905499626dd8ae6b317151f",
     "logo.png": "f4e1662a7d1109edee994cf85f710866e381f12dff2dd2369dce3f40d93d1081",
-    "reglages.html": "863f55de9c7315ccf89efa013b7243677a1f7809ed90c62e68a87eba1259bf56",
+    "reglages.html": "4c654c75e6de0e16f93b06065e0f11d95def5d442977d51aed4ae51db4a1d36c",
     "requirements.txt": "21186e2045ada887869ceb11f746796d24dd1cbf01e02e1389bdc5986cb87bc3"
   },
   "supprimer": [
