@@ -528,6 +528,7 @@ body.occupe .choix{pointer-events:none;opacity:.45}
         <div class="ligne" id="maj-redem" style="display:none"><div><b>Restart needed</b><small id="maj-redem-t"></small></div><button class="btn bleu petit" id="maj-redem-btn">Restart</button></div>
         <div class="ligne" id="ln-majauto"><div><b>Check for updates</b><small id="version">Every 10 minutes. Nothing is installed without your OK</small></div><div class="bascule" data-k="maj_auto"></div></div>
         <div class="ligne" id="ln-majdev"><div><b>Development versions</b><small>Also offer unfinished test versions, not only final releases</small></div><div class="bascule" data-k="maj_dev"></div></div>
+        <div class="ligne"><div><b>Website</b><small>hear.devliam.com</small></div><button class="btn bleu petit" id="site-btn">Open</button></div>
       </div></div></div></div>
     </div>
   </div>
@@ -840,6 +841,7 @@ function majDonnees(){
   t.textContent = S.donnees + (donneesTaille != null ? " · " + (donneesTaille / 1e9).toFixed(1) + " GB" : "");
 }
 async function lireTaille(){ const a = api(); if(a && a.donnees_taille){ donneesTaille = await a.donnees_taille(); majDonnees(); } }
+$("#site-btn").onclick = () => { const a = api(); if(a && a.ouvrir_site) a.ouvrir_site(); };
 $("#donnees-btn").onclick = async () => {
   if(S.occupe) return toast("Locked while Hear is recording", true);
   const a = api(); if(!a || !a.choisir_dossier) return;

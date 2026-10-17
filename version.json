@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.1.1",
   "canal": "stable",
   "requirements": false,
   "files": {
@@ -8,19 +8,20 @@
     "agent.png": "52384f17e2a08bcd1b9affb8cf5d0f7b7fa27dc448118d54fe8e4c305d24be1e",
     "hear.py": "0273f64231ee2ae580bac29467d528ac48c4c77b2be03f345858006170fe2c81",
     "hear_agent.pyc": "03f298397aee575d1b53dcef42e2842dd810044da6056c56e763813566241994",
-    "hear_app.pyc": "a4b621ee622c682f8fe09a904b4f25d5a40de253aab706be4c9f20a2a0001522",
+    "hear_app.pyc": "433159c0d369dcc42457378ed5ab065509dfc5a0df0061c8c898b7a8a4340f3f",
     "hear_audio.pyc": "5f92bb84b2eb07acd9e2fe7dba2aafdafa3b9e28ecc0075ef137b36373972133",
     "hear_config.pyc": "5cd4d857c188a079d4a6b4aaf0dc8216ff4e4f0fcd312b686166cb173bc8b76b",
     "hear_dessin.pyc": "08def8549424d1797de34f2086b30485d79348a7f1d9ac27aeede432004cd0ba",
     "hear_langue.pyc": "8987049074674e3d21dbf08c442b275cb92667b7009d35c682b66cb16c764b4e",
     "hear_maj.pyc": "c6175b20e1502d07285849dffb453dfa3cb462052202d656f68d018988b6647a",
     "hear_nombres.pyc": "30909c0723a4c460c68981337c246644897cfd4e1c9193d8e5cdcaa2f3c64385",
+    "hear_premier.pyc": "d51409adc3543c95152c342a23ce7155d8b9324f0364812886b6d596f14e46d8",
     "hear_reglages_web.py": "3bd7c4d6a840c7c6f4dc47c83d2a9fe13ddacd54eb94f1fbf7a91a4566c90fdd",
-    "hear_reglages_web_app.pyc": "e27ea23206e0df4b3674de1e8f58b560d66e187f127d226b4e93abafa00cb25a",
+    "hear_reglages_web_app.pyc": "14e84119a2c2aeeafbc9304d01e47d3d7f768c645498e14856c801447065920f",
     "hear_signature.pyc": "40ffd4733f1b5e0ab931edc0294896b83e036e80be49e579e4eaa89200e9acc5",
     "logo.ico": "9ad1a5974a56781356d03c98b656ae26fd71ca5cd905499626dd8ae6b317151f",
     "logo.png": "f4e1662a7d1109edee994cf85f710866e381f12dff2dd2369dce3f40d93d1081",
-    "reglages.html": "8043d4091a262f370f6990d89847f69783927fac6e96b267aa887547a7dc439d",
+    "reglages.html": "863f55de9c7315ccf89efa013b7243677a1f7809ed90c62e68a87eba1259bf56",
     "requirements.txt": "21186e2045ada887869ceb11f746796d24dd1cbf01e02e1389bdc5986cb87bc3"
   },
   "supprimer": [
@@ -31,6 +32,7 @@
     "hear_langue.py",
     "hear_maj.py",
     "hear_nombres.py",
+    "hear_premier.py",
     "hear_reglages.py",
     "hear_reglages.pyc",
     "hear_signature.py"
