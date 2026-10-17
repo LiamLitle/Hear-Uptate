@@ -519,13 +519,15 @@ body.occupe .choix{pointer-events:none;opacity:.45}
     <div class="section" data-s="systeme">
       <div class="titre"><svg viewBox="0 0 12 12"><path d="M2.5 4.5L6 8l3.5-3.5"/></svg>System</div>
       <div class="plie"><div class="in"><div class="pad"><div class="carte">
-        <div class="ligne"><b>Start with Windows</b><div class="bascule" data-k="autostart"></div></div>
-        <div class="ligne"><div><b>Updates</b><small id="maj-etat">Version</small></div><button class="btn bleu petit" id="maj-btn">Check now</button></div>
+        <div class="ligne" id="ln-autostart"><b>Start with Windows</b><div class="bascule" data-k="autostart"></div></div>
+        <div class="ligne"><div><b>Storage</b><small id="donnees-t">Hear's files and AI models</small></div><button class="btn bleu petit" id="donnees-btn">Change…</button></div>
+        <div class="ligne" id="donnees-conf" style="display:none"><div><b>Move Hear's files?</b><small id="donnees-cible"></small></div><button class="btn bleu petit" id="donnees-ok">Move</button></div>
+        <div class="ligne" id="ln-maj"><div><b>Updates</b><small id="maj-etat">Version</small></div><button class="btn bleu petit" id="maj-btn">Check now</button></div>
         <div class="ligne" id="maj-dispo" style="display:none"><div><b id="maj-dispo-titre">Update available</b><small id="maj-dispo-t"></small></div><button class="btn bleu petit" id="maj-dl">Download now</button></div>
         <div class="ligne" id="maj-repar" style="display:none"><div><b>Modified files</b><small>Put back the files of the installed version. Hear will restart</small></div><button class="btn rouge petit" id="maj-repar-btn">Repair</button></div>
         <div class="ligne" id="maj-redem" style="display:none"><div><b>Restart needed</b><small id="maj-redem-t"></small></div><button class="btn bleu petit" id="maj-redem-btn">Restart</button></div>
-        <div class="ligne"><div><b>Check for updates</b><small id="version">Every 10 minutes. Nothing is installed without your OK</small></div><div class="bascule" data-k="maj_auto"></div></div>
-        <div class="ligne"><div><b>Development versions</b><small>Also offer unfinished test versions, not only final releases</small></div><div class="bascule" data-k="maj_dev"></div></div>
+        <div class="ligne" id="ln-majauto"><div><b>Check for updates</b><small id="version">Every 10 minutes. Nothing is installed without your OK</small></div><div class="bascule" data-k="maj_auto"></div></div>
+        <div class="ligne" id="ln-majdev"><div><b>Development versions</b><small>Also offer unfinished test versions, not only final releases</small></div><div class="bascule" data-k="maj_dev"></div></div>
       </div></div></div></div>
     </div>
   </div>
@@ -757,6 +759,8 @@ function maj(){
     $("#maj-dispo-t").textContent = (dev ? "Unfinished test version. " : "") + "Hear will restart after the update (about 5 seconds).";
   }
   $("#maj-repar").style.display = mj.etat === "ko" ? "" : "none";
+  majDonnees();
+  if(S.magasin) ["#ln-maj", "#ln-majauto", "#ln-majdev", "#maj-dispo", "#maj-repar", "#ln-autostart"].forEach(s => $(s).style.display = "none");
   const rd = !!(va && S.version && va !== S.version);
   $("#maj-redem").style.display = rd ? "" : "none";
   if(rd) $("#maj-redem-t").textContent = "Version " + S.version + " is installed, but Hear is still running " + va + ".";
@@ -829,6 +833,30 @@ const ajouter = () => { const i = $("#mem-new"), v = i.value.trim(); if(!v) retu
 $("#mem-add").onclick = ajouter; $("#mem-new").onkeydown = e => { if(e.key === "Enter") ajouter(); };
 $("#maj-btn").onclick = () => { if(S.occupe) return toast("Locked while Hear is recording", true); S.maj = {etat: "check"}; maj(); envoyer("@maj", Date.now()); };
 $("#maj-redem-btn").onclick = () => envoyer("@relancer", Date.now());
+// emplacement des fichiers de Hear : un autre dossier ou un autre disque
+let donneesTaille = null, donneesCible = null;
+function majDonnees(){
+  const t = $("#donnees-t"); if(!t || !S.donnees) return;
+  t.textContent = S.donnees + (donneesTaille != null ? " · " + (donneesTaille / 1e9).toFixed(1) + " GB" : "");
+}
+async function lireTaille(){ const a = api(); if(a && a.donnees_taille){ donneesTaille = await a.donnees_taille(); majDonnees(); } }
+$("#donnees-btn").onclick = async () => {
+  if(S.occupe) return toast("Locked while Hear is recording", true);
+  const a = api(); if(!a || !a.choisir_dossier) return;
+  const r = await a.choisir_dossier();
+  if(!r || !r.cible){ if(r && r.erreur) toast(r.erreur, true); return; }
+  if(r.erreur) return toast(r.erreur, true);
+  donneesCible = r.cible;
+  $("#donnees-cible").textContent = "To " + r.cible + ". Hear will restart and move them, AI models included.";
+  $("#donnees-conf").style.display = "";
+};
+$("#donnees-ok").onclick = async () => {
+  const a = api(); if(!a || !donneesCible) return;
+  const r = await a.deplacer_donnees(donneesCible);
+  if(r && r.erreur) return toast(r.erreur, true);
+  $("#donnees-conf").style.display = "none";
+  toast("Hear is restarting to move its files…");
+};
 $("#maj-dl").onclick = () => { if(S.occupe) return toast("Locked while Hear is recording", true); S.maj = Object.assign({}, S.maj, {etat: "installation"}); maj(); toast("Downloading\u2026 Hear will restart"); envoyer("@maj_installer", Date.now()); };
 let confirmerRepar = false;
 $("#maj-repar-btn").onclick = () => {
@@ -941,6 +969,7 @@ async function demarrer(){
   const a = api(); if(!a) return;
   const m0 = await a.page();
   S = await a.etat(); construire(); setMode(m0, false);
+  lireTaille();
 
   setInterval(rafraichir, 700);
   window.changerUnivers = m => setMode(m, true);
